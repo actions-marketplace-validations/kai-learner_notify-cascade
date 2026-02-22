@@ -1,0 +1,84 @@
+name: 'Notify Cascade'
+description: 'Send notifications to Slack, email, and custom webhooks in one step. No more juggling 3 separate actions.'
+author: 'kai-learner'
+
+branding:
+  icon: 'bell'
+  color: 'blue'
+
+inputs:
+  message:
+    description: 'Notification message body (supports markdown for Slack)'
+    required: true
+  title:
+    description: 'Notification title (used in email subject and Slack header)'
+    required: false
+    default: 'GitHub Notification'
+
+  # Slack
+  slack-webhook:
+    description: 'Slack Incoming Webhook URL (skip to disable Slack)'
+    required: false
+  slack-channel:
+    description: 'Override Slack channel (e.g. #alerts). Leave blank to use webhook default.'
+    required: false
+  slack-username:
+    description: 'Override Slack bot username'
+    required: false
+    default: 'GitHub Actions'
+  slack-icon-emoji:
+    description: 'Override Slack bot icon emoji (e.g. :rocket:)'
+    required: false
+    default: ':octocat:'
+
+  # Email (SMTP)
+  smtp-host:
+    description: 'SMTP server hostname (skip to disable email)'
+    required: false
+  smtp-port:
+    description: 'SMTP server port'
+    required: false
+    default: '587'
+  smtp-secure:
+    description: 'Use TLS (true for port 465, false for STARTTLS on 587)'
+    required: false
+    default: 'false'
+  smtp-user:
+    description: 'SMTP username'
+    required: false
+  smtp-password:
+    description: 'SMTP password'
+    required: false
+  email-from:
+    description: 'Sender email address'
+    required: false
+  email-to:
+    description: 'Recipient email address(es), comma-separated'
+    required: false
+
+  # HTTP Webhook
+  webhook-url:
+    description: 'Custom HTTP webhook URL (skip to disable)'
+    required: false
+  webhook-method:
+    description: 'HTTP method for webhook (GET or POST)'
+    required: false
+    default: 'POST'
+  webhook-headers:
+    description: 'Extra headers as JSON string (e.g. {"Authorization": "Bearer token"})'
+    required: false
+  webhook-body-template:
+    description: 'Custom JSON body template. Use {{message}} and {{title}} as placeholders.'
+    required: false
+
+outputs:
+  slack-status:
+    description: 'Slack notification result: sent | skipped | failed'
+  email-status:
+    description: 'Email notification result: sent | skipped | failed'
+  webhook-status:
+    description: 'Webhook notification result: sent | skipped | failed'
+
+runs:
+  using: 'node20'
+  main: 'dist/index.js'
